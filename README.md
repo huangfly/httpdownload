@@ -1,0 +1,2 @@
+# httpdownload
+今天遇到的问题写的通过libcurl库实现的http多线程分段下载的工具
