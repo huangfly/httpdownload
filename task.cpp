@@ -11,22 +11,14 @@ size_t write_data(void* ptr, size_t size, size_t nmemb, void* userdata){
 		//多线程写同一个文件, 需要加锁
 		pthread_mutex_lock (&CurlHttpTask::m_mutex);
 		if(task->m_startPos + size * nmemb <= task->m_stopPos){
-			char *buf = new char[size];
-			int n = atoi(task->m_taskName.c_str());
-			memset(buf,n+48,size);
 			fseek(task->m_fp, task->m_startPos, SEEK_SET);
 			written = fwrite(ptr, size, nmemb, task->m_fp);
 			task->m_startPos += size * nmemb;
-			delete[]buf;
 		}
 		else{
 			fseek(task->m_fp, task->m_startPos, SEEK_SET);
-			char *buf = new char[size];
-			int n = atoi(task->m_taskName.c_str());
-			memset(buf,n+48,size);
 			written = fwrite(ptr, 1, task->m_stopPos - task->m_startPos + 1, task->m_fp);
 			task->m_startPos = task->m_stopPos;
-			delete[] buf;
 		}
 		pthread_mutex_unlock (&CurlHttpTask::m_mutex);
 	}else{
